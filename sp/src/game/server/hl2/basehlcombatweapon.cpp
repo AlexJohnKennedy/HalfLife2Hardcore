@@ -179,10 +179,6 @@ void CHLMachineGun::DoMachineGunKick( CBasePlayer *pPlayer, float dampEasy, floa
 	if ( random->RandomInt( -1, 1 ) >= 0 )
 		vecScratch.y *= -1;
 
-	//Wobble up and down
-	if ( random->RandomInt( -1, 1 ) >= 0 )
-		vecScratch.z *= -1;
-
 	//If we're in easy, dampen the effect a bit
 	if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) )
 	{
