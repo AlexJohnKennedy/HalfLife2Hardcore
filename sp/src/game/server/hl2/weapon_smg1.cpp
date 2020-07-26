@@ -36,9 +36,8 @@ public:
 	void	Precache( void );
 	void	AddViewKick( void );
 	void	SecondaryAttack( void );
-
-	int		GetMinBurst() { return 2; }
-	int		GetMaxBurst() { return 5; }
+	int		GetMinBurst() { return 8; } // BREADMAN
+	int		GetMaxBurst() { return 15; }
 
 	virtual void Equip( CBaseCombatCharacter *pOwner );
 	bool	Reload( void );
@@ -50,7 +49,7 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
+		static const Vector cone = VECTOR_CONE_2DEGREES;
 		return cone;
 	}
 
@@ -139,7 +138,7 @@ IMPLEMENT_ACTTABLE(CWeaponSMG1);
 CWeaponSMG1::CWeaponSMG1( )
 {
 	m_fMinRange1		= 0;// No minimum range. 
-	m_fMaxRange1		= 1400;
+	m_fMaxRange1		= 3000;
 
 	m_bAltFiresUnderwater = false;
 }
@@ -165,7 +164,7 @@ void CWeaponSMG1::Equip( CBaseCombatCharacter *pOwner )
 	}
 	else
 	{
-		m_fMaxRange1 = 1400;
+		m_fMaxRange1 = 3000;
 	}
 
 	BaseClass::Equip( pOwner );
@@ -180,8 +179,7 @@ void CWeaponSMG1::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, Vector 
 	WeaponSoundRealtime( SINGLE_NPC );
 
 	CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
-	pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED,
-		MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2, entindex(), 0 );
+	pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2, entindex(), 0 );
 
 	pOperator->DoMuzzleFlash();
 	m_iClip1 = m_iClip1 - 1;
@@ -232,13 +230,10 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 		case EVENT_WEAPON_AR2_GRENADE:
 		{
 		CAI_BaseNPC *npc = pOperator->MyNPCPointer();
-
 		Vector vecShootOrigin, vecShootDir;
 		vecShootOrigin = pOperator->Weapon_ShootPosition();
 		vecShootDir = npc->GetShootEnemyDir( vecShootOrigin );
-
 		Vector vecThrow = m_vecTossVelocity;
-
 		CGrenadeAR2 *pGrenade = (CGrenadeAR2*)Create( "grenade_ar2", vecShootOrigin, vec3_angle, npc );
 		pGrenade->SetAbsVelocity( vecThrow );
 		pGrenade->SetLocalAngularVelocity( QAngle( 0, 400, 0 ) );
@@ -246,10 +241,8 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 		pGrenade->m_hOwner			= npc;
 		pGrenade->m_pMyWeaponAR2	= this;
 		pGrenade->SetDamage(sk_npc_dmg_ar2_grenade.GetFloat());
-
 		// FIXME: arrgg ,this is hard coded into the weapon???
 		m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
-
 		m_iClip2--;
 		}
 		break;
@@ -305,10 +298,10 @@ bool CWeaponSMG1::Reload( void )
 //-----------------------------------------------------------------------------
 void CWeaponSMG1::AddViewKick( void )
 {
-	#define	EASY_DAMPEN			0.5f
-	#define	MAX_VERTICAL_KICK	1.0f	//Degrees
-	#define	SLIDE_LIMIT			2.0f	//Seconds
-	
+	#define	EASY_DAMPEN			2.5f	// Breadman
+	#define	MAX_VERTICAL_KICK	11.0f	//Degrees - was 1.0
+	#define	SLIDE_LIMIT			2.0f	//Seconds - was 2.0
+
 	//Get the view kick
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 
