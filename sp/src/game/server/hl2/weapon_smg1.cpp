@@ -21,7 +21,10 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-extern ConVar    sk_plr_dmg_smg1_grenade;	
+extern ConVar    sk_plr_dmg_smg1_grenade;
+
+ConVar sk_smg1_spread_penalty_per_shot("sk_smg1_spread_penalty_per_shot", "0.25");
+ConVar sk_smg1_spread_penalty_max("sk_sm1_spread_penalty_max", "1.8");
 
 class CWeaponSMG1 : public CHLSelectFireMachineGun
 {
@@ -50,6 +53,20 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{
 		static const Vector cone = VECTOR_CONE_2DEGREES;
+
+		// Ramp inaccuracy based on 'num shots fired'
+		float spreadPenatly = m_nShotsFired * sk_smg1_spread_penalty_per_shot.GetFloat();
+
+		// CODE COPIED FROM weapon_pistol.cpp
+		float ramp = RemapValClamped(spreadPenatly, 
+											0.0f, 
+											sk_smg1_spread_penalty_max.GetFloat(), 
+											0.0f, 
+											1.0f); 
+
+			// We lerp from very accurate to inaccurate over time
+			VectorLerp(VECTOR_CONE_2DEGREES, VECTOR_CONE_8DEGREES, ramp, cone);
+
 		return cone;
 	}
 
