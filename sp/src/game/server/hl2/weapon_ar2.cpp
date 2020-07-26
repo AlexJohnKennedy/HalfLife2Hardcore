@@ -465,6 +465,31 @@ void CWeaponAR2::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChara
 	}
 }
 
+ConVar sk_ar2_spread_penalty_per_shot("sk_ar2_spread_penalty_per_shot", "0.3");
+ConVar sk_ar2_spread_penalty_max("sk_ar2_spread_penalty_max", "1.2");
+
+const Vector& CWeaponAR2::GetBulletSpread( void )
+{
+	static Vector cone;
+	
+	cone = VECTOR_CONE_1DEGREES;
+
+	// Ramp inaccuracy based on 'num shots fired'
+	float spreadPenatly = m_nShotsFired * sk_ar2_spread_penalty_per_shot.GetFloat();
+
+	// CODE COPIED FROM weapon_pistol.cpp
+	float ramp = RemapValClamped(spreadPenatly, 
+										0.0f, 
+										sk_ar2_spread_penalty_max.GetFloat(), 
+										0.0f, 
+										1.0f);
+
+		// We lerp from very accurate to inaccurate over time
+		VectorLerp(VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone);
+
+	return cone;
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------

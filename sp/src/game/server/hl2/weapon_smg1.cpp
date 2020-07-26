@@ -52,7 +52,7 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_2DEGREES;
+		static Vector cone = VECTOR_CONE_2DEGREES;
 
 		// Ramp inaccuracy based on 'num shots fired'
 		float spreadPenatly = m_nShotsFired * sk_smg1_spread_penalty_per_shot.GetFloat();
@@ -316,7 +316,7 @@ bool CWeaponSMG1::Reload( void )
 void CWeaponSMG1::AddViewKick( void )
 {
 	#define	EASY_DAMPEN			2.5f	// Breadman
-	#define	MAX_VERTICAL_KICK	11.0f	//Degrees - was 1.0
+	#define	MAX_VERTICAL_KICK	8.0f	//Degrees - was 1.0
 	#define	SLIDE_LIMIT			2.0f	//Seconds - was 2.0
 
 	//Get the view kick

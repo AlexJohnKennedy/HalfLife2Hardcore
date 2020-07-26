@@ -54,14 +54,7 @@ public:
 	
 	void	DoImpactEffect( trace_t &tr, int nDamageType );
 
-	virtual const Vector& GetBulletSpread( void )
-	{
-		static Vector cone;
-		
-		cone = VECTOR_CONE_1DEGREES;
-
-		return cone;
-	}
+	virtual const Vector& GetBulletSpread( void );
 
 	const WeaponProficiencyInfo_t *GetProficiencyValues();
 
