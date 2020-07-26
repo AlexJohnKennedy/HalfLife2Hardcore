@@ -37,6 +37,9 @@ ConVar sk_combine_guard_kick( "sk_combine_guard_kick", "0");
 // Whether or not the combine guard should spawn health on death
 ConVar combine_guard_spawn_health( "combine_guard_spawn_health", "1" );
 
+// Custom headshot damage for combine soldiers - These guys are heavily armours so headshots are essential
+ConVar sk_npc_head_combine_soldier("sk_npc_head_combine_soldier", "2");
+
 extern ConVar sk_plr_dmg_buckshot;	
 extern ConVar sk_plr_num_shotgun_pellets;
 
@@ -209,8 +212,7 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier( int iHitGroup, const CTakeDama
 	{
 	case HITGROUP_HEAD:
 		{
-			// Soldiers take double headshot damage
-			return 2.0f;
+			return sk_npc_head_combine_soldier.GetFloat();
 		}
 	}
 
