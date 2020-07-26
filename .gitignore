@@ -1,5 +1,8 @@
 # Files to ignore when considering what GIT should commit.
 
+# BSP Maps: Git LFS currently does not support pushing new objects to public forks, so for now i'll just ignore the map files
+*.bsp
+
 # Visual Studio 
 *.suo
 *.user
